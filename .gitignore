@@ -4,4 +4,4 @@ __pycache__
 .vscode
 myDatabase.db
 plan.txt
-.code-workspace
+WorkSpace.code-workspace
