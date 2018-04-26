@@ -2,7 +2,7 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
-    '''This class repersents the player and can move'''
+    '''This class repersents the sheild that help the player'''
 
     def __init__(self):
         '''Sets up the player's ship'''
