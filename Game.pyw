@@ -72,6 +72,20 @@ class Game():
         self.alien_list = pygame.sprite.Group()
         self.all_sprites_list = pygame.sprite.Group()
 
+        for x in range(70, screen_width-105, 140):
+            for y in range(50, int(screen_height/2)+50, 80):
+                alien = Alien.Alien()
+
+                alien.rect.x = x
+                alien.rect.y = y
+
+                self.alien_list.add(alien)
+                self.all_sprites_list.add(alien)
+
+        for x in range(40, screen_width, 100):
+
+        print(len(self.all_sprites_list))
+
     def process_events(self):
         """ Process all of the events. Return a "True" if we need
             to close the window. """
@@ -93,6 +107,9 @@ class Game():
         '''Redraws the pygame window from there possitons'''
         # clears the screen
         screen.fill(WHITE)
+
+        if not self.game_over:
+            self.all_sprites_list.draw(screen)
 
         # Draws everything to the game window in one flip
         pygame.display.flip()
