@@ -1,5 +1,12 @@
 import pygame
 
+# Colours
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
 
 class Player(pygame.sprite.Sprite):
     '''This class repersents the player and can move'''
@@ -16,6 +23,8 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         '''Allows the player to move across the screen using mouse co-ords'''
+        pos = pygame.mouse.get_pos()
+        self.rect.x = pos[0]
         return
 
     def shoot(self):

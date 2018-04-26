@@ -36,6 +36,20 @@ try:
 finally:
     sys.path[:] = path  # restore
 
+# Imports the alien sprite file
+# Written out by editing the path as it is more relable then pythons cross file imports
+filename = "Libary/Sprites/Sheild.pyw"
+
+directory, module_name = os.path.split(filename)
+module_name = os.path.splitext(module_name)[0]
+
+path = list(sys.path)
+sys.path.insert(0, directory)
+try:
+    Sheild = __import__(module_name)
+finally:
+    sys.path[:] = path  # restore
+
 # Creats varbles used in the entire program
 
 # Colours
@@ -71,9 +85,10 @@ class Game():
         # Create sprite lists
         self.alien_list = pygame.sprite.Group()
         self.all_sprites_list = pygame.sprite.Group()
+        self.all_shields_list = pygame.sprite.Group()
 
         for x in range(70, screen_width-105, 140):
-            for y in range(50, int(screen_height/2)+50, 80):
+            for y in range(30, int(screen_height/2)+50, 80):
                 alien = Alien.Alien()
 
                 alien.rect.x = x
@@ -82,9 +97,21 @@ class Game():
                 self.alien_list.add(alien)
                 self.all_sprites_list.add(alien)
 
-        for x in range(40, screen_width, 100):
+        for x in range(40, screen_width, 200):
+            shield = Sheild.Sheild()
 
-        print(len(self.all_sprites_list))
+            shield.rect.x = x
+            shield.rect.y = 370
+
+            self.all_shields_list.add(shield)
+            self.all_sprites_list.add(shield)
+
+        self.player = Player.Player()
+
+        self.player.rect.x = 0
+        self.player.rect.y = screen_height - 65
+
+        self.all_sprites_list.add(self.player)
 
     def process_events(self):
         """ Process all of the events. Return a "True" if we need
@@ -101,6 +128,9 @@ class Game():
 
     def run_logic(self):
         '''Controls the movement and collisions of all of the sprites'''
+
+        if not self.game_over:
+            self.all_sprites_list.update()
         return
 
     def display_frame(self, screen):
