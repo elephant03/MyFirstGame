@@ -66,6 +66,20 @@ try:
 finally:
     sys.path[:] = path  # restore
 
+# Imports the players's laser sprite file
+# Written out by editing the path as it is more relable then pythons cross file imports
+filename = "Libary/Sprites/PlayerLaser.pyw"
+
+directory, module_name = os.path.split(filename)
+module_name = os.path.splitext(module_name)[0]
+
+path = list(sys.path)
+sys.path.insert(0, directory)
+try:
+    PlayerLaser = __import__(module_name)
+finally:
+    sys.path[:] = path  # restore
+
 # Creats varbles used in the entire program
 
 # Colours
@@ -96,12 +110,14 @@ class Game():
 
         self.score = 0
 
+        self.LaserCooldown = 0
+
         self.game_over = False
 
         # Create sprite lists
         self.alien_list = pygame.sprite.Group()
         self.all_sprites_list = pygame.sprite.Group()
-        self.all_shields_list = pygame.sprite.Group()
+        self.alien_damage_list = pygame.sprite.Group()
 
         for x in range(70, screen_width-105, 140):
             for y in range(30, int(screen_height/2)+50, 80):
@@ -122,7 +138,7 @@ class Game():
             shield.rect.x = x
             shield.rect.y = 370
 
-            self.all_shields_list.add(shield)
+            self.alien_damage_list.add(shield)
             self.all_sprites_list.add(shield)
 
         self.player = Player.Player()
@@ -130,6 +146,7 @@ class Game():
         self.player.rect.x = 0
         self.player.rect.y = screen_height - 65
 
+        self.alien_damage_list.add(self.player)
         self.all_sprites_list.add(self.player)
 
     def process_events(self):
@@ -139,6 +156,14 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return True
+            if event.type == pygame.MOUSEBUTTONDOWN and self.LaserCooldown <= 0:
+                playerlaser = PlayerLaser.PlayerLaser(
+                    self.player.rect.x, self.player.rect.y)
+
+                self.LaserCooldown = 100
+
+                self.all_sprites_list.add(playerlaser)
+
             # At the end of the game a "click to restart" will apear that will run this code
             if self.game_over and event.type == pygame.MOUSEBUTTONDOWN:
                 self.__init__()
@@ -158,6 +183,8 @@ class Game():
                         alien.rect.x, alien.rect.y)
 
                     self.all_sprites_list.add(alein_shot)
+            if self.LaserCooldown > 0:
+                self.LaserCooldown -= 1
         return
 
     def display_frame(self, screen):
