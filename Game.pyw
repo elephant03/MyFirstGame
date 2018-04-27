@@ -97,6 +97,9 @@ class Game():
                 self.alien_list.add(alien)
                 self.all_sprites_list.add(alien)
 
+                # print(alien.rect.x)
+                # print(alien.rect.y)
+
         for x in range(40, screen_width, 200):
             shield = Sheild.Sheild()
 

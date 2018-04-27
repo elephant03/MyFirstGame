@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # Colours
 RED = (255, 0, 0)
@@ -22,10 +23,18 @@ class Alien(pygame.sprite.Sprite):
 
     def update(self):
         '''Allows the alien to move across the screen'''
+        if self.rect.x >= 1000:
+            self.rect.x = -70
+        self.rect.x += 1
+
+        if random.randint(0, 3000) == 42:
+            self.shoot()
+
         return
 
     def shoot(self):
         '''Makes the align fire a laser then will interact with shilds and the player'''
+        print("\"Pew!\" said an alien")
         return
 
     def die(self):
