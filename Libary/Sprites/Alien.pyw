@@ -1,6 +1,22 @@
 import pygame
 import random
 
+# Imports the alien's laser sprite file
+# Written out by editing the path as it is more relable then pythons cross file imports
+import os
+import sys
+filename = "Libary/Sprites/AlienLaser.pyw"
+
+directory, module_name = os.path.split(filename)
+module_name = os.path.splitext(module_name)[0]
+
+path = list(sys.path)
+sys.path.insert(0, directory)
+try:
+    AlienLaser = __import__(module_name)
+finally:
+    sys.path[:] = path  # restore
+
 # Colours
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
