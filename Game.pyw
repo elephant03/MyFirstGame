@@ -6,6 +6,8 @@ except ImportError:
     print("Cannot load pygame.\nPlease check that it installed and try again.")
     raise SystemExit
 
+import random
+
 # Imports the alien sprite file
 # Written out by editing the path as it is more relable then pythons cross file imports
 import os
@@ -47,6 +49,20 @@ path = list(sys.path)
 sys.path.insert(0, directory)
 try:
     Sheild = __import__(module_name)
+finally:
+    sys.path[:] = path  # restore
+
+# Imports the alien's laser sprite file
+# Written out by editing the path as it is more relable then pythons cross file imports
+filename = "Libary/Sprites/AlienLaser.pyw"
+
+directory, module_name = os.path.split(filename)
+module_name = os.path.splitext(module_name)[0]
+
+path = list(sys.path)
+sys.path.insert(0, directory)
+try:
+    AlienLaser = __import__(module_name)
 finally:
     sys.path[:] = path  # restore
 
@@ -134,6 +150,14 @@ class Game():
 
         if not self.game_over:
             self.all_sprites_list.update()
+
+            for alien in self.alien_list:
+
+                if random.randint(0, 500) == 42:
+                    alein_shot = AlienLaser.AlienLaser(
+                        alien.rect.x, alien.rect.y)
+
+                    self.all_sprites_list.add(alein_shot)
         return
 
     def display_frame(self, screen):

@@ -1,21 +1,4 @@
 import pygame
-import random
-
-# Imports the alien's laser sprite file
-# Written out by editing the path as it is more relable then pythons cross file imports
-import os
-import sys
-filename = "Libary/Sprites/AlienLaser.pyw"
-
-directory, module_name = os.path.split(filename)
-module_name = os.path.splitext(module_name)[0]
-
-path = list(sys.path)
-sys.path.insert(0, directory)
-try:
-    AlienLaser = __import__(module_name)
-finally:
-    sys.path[:] = path  # restore
 
 # Colours
 RED = (255, 0, 0)
@@ -42,15 +25,6 @@ class Alien(pygame.sprite.Sprite):
         if self.rect.x >= 1000:
             self.rect.x = -70
         self.rect.x += 1
-
-        if random.randint(0, 3000) == 42:
-            self.shoot()
-
-        return
-
-    def shoot(self):
-        '''Makes the align fire a laser then will interact with shilds and the player'''
-        print("\"Pew!\" said an alien")
         return
 
     def die(self):

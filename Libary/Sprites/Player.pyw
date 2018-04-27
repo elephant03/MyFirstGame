@@ -27,10 +27,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         return
 
-    def shoot(self):
-        '''Makes the player fire a laser then will interact with shilds and the aliens'''
-        return
-
     def die(self):
         '''If the player is hit by the alien they will explode and game over'''
         return
