@@ -28,8 +28,7 @@ class Sheild(pygame.sprite.Sprite):
 
     def hit(self):
         '''will subtract a life and destroy the sheild if it gets too damaged'''
-        return
-
-    def die(self):
-        '''Destroys the sheild'''
-        return
+        self.lives -= 1
+        if self.lives > 0:
+            return False
+        return True

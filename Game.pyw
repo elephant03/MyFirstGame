@@ -90,9 +90,9 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 # Screen dimentions
-screen_width = 1000
-screen_height = 500
-screen_size = (screen_width, screen_height)
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 500
+SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 # FPS rate
 FPS = 60
@@ -115,36 +115,47 @@ class Game():
         self.game_over = False
 
         # Create sprite lists
+        # Comtains all of the aliens
         self.alien_list = pygame.sprite.Group()
+        # Contains every sprite
         self.all_sprites_list = pygame.sprite.Group()
+        # Contains everything the aliens can damage
         self.alien_damage_list = pygame.sprite.Group()
+        # Contains everything the player can damage
+        self.player_damage_list = pygame.sprite.Group()
+        # Contains the players lasers
+        self.player_shots_list = pygame.sprite.Group()
+        # COntains the alien lasers
+        self.alien_shots_list = pygame.sprite.Group()
 
-        for x in range(70, screen_width-105, 140):
-            for y in range(30, int(screen_height/2)+50, 80):
+        for x in range(70, SCREEN_WIDTH-105, 140):
+            for y in range(30, int(SCREEN_HEIGHT/2)+50, 80):
                 alien = Alien.Alien()
 
                 alien.rect.x = x
                 alien.rect.y = y
 
                 self.alien_list.add(alien)
+                self.player_damage_list.add(alien)
                 self.all_sprites_list.add(alien)
 
                 # print(alien.rect.x)
                 # print(alien.rect.y)
 
-        for x in range(40, screen_width, 200):
+        for x in range(40, SCREEN_WIDTH, 200):
             shield = Sheild.Sheild()
 
             shield.rect.x = x
             shield.rect.y = 370
 
             self.alien_damage_list.add(shield)
+            self.player_damage_list.add(shield)
             self.all_sprites_list.add(shield)
 
         self.player = Player.Player()
 
         self.player.rect.x = 0
-        self.player.rect.y = screen_height - 65
+        self.player.rect.y = SCREEN_HEIGHT - 65
 
         self.alien_damage_list.add(self.player)
         self.all_sprites_list.add(self.player)
@@ -156,13 +167,17 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return True
-            if event.type == pygame.MOUSEBUTTONDOWN and self.LaserCooldown <= 0:
-                playerlaser = PlayerLaser.PlayerLaser(
-                    self.player.rect.x, self.player.rect.y)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if not self.game_over and self.LaserCooldown <= 0:
+                    playerlaser = PlayerLaser.PlayerLaser(
+                        self.player.rect.x, self.player.rect.y)
 
-                self.LaserCooldown = 100
+                    self.LaserCooldown = 50
 
-                self.all_sprites_list.add(playerlaser)
+                    self.player_shots_list.add(playerlaser)
+                    self.all_sprites_list.add(playerlaser)
+                if self.game_over:
+                    self.__init__()
 
             # At the end of the game a "click to restart" will apear that will run this code
             if self.game_over and event.type == pygame.MOUSEBUTTONDOWN:
@@ -178,19 +193,58 @@ class Game():
 
             for alien in self.alien_list:
 
-                if random.randint(0, 500) == 42:
+                if random.randint(0, len(self.alien_list)*19) == 1:
                     alein_shot = AlienLaser.AlienLaser(
                         alien.rect.x, alien.rect.y)
 
                     self.all_sprites_list.add(alein_shot)
+                    self.alien_shots_list.add(alein_shot)
             if self.LaserCooldown > 0:
                 self.LaserCooldown -= 1
+
+            # See if the players shots have collided with anything.
+            for laser in self.player_shots_list:
+                laser_hit_list = pygame.sprite.spritecollide(
+                    laser, self.player_damage_list, False)
+                for collision in laser_hit_list:
+                    destroy = collision.hit()
+                    if destroy:
+                        self.all_sprites_list.remove(collision)
+                        collision.kill()
+                        if len(self.alien_list) == 0:
+                            self.game_over = True
+                    laser.kill()
+
+            for laser in self.alien_shots_list:
+                laser_hit_list = pygame.sprite.spritecollide(
+                    laser, self.alien_damage_list, False)
+
+                for collision in laser_hit_list:
+                    destroy = collision.hit()
+                    if destroy:
+                        self.all_sprites_list.remove(collision)
+                        collision.kill()
+                        if collision == self.player:
+                            self.game_over = True
+                    laser.kill()
+
         return
 
     def display_frame(self, screen):
         '''Redraws the pygame window from there possitons'''
         # clears the screen
         screen.fill(WHITE)
+
+        if self.game_over:
+            # font = pygame.font.Font("Serif", 25)
+            self.text = "Game Over, You Loose- click to restart!"
+            if self.player.lives > 0:
+                self.text = "You win! click to play again!"
+            font = pygame.font.SysFont("Arial", 25)
+            text = font.render(self.text, True, BLACK)
+            center_x = (SCREEN_WIDTH // 2) - (text.get_width() // 2)
+            center_y = (SCREEN_HEIGHT // 2) - (text.get_height() // 2)
+            screen.blit(text, [center_x, center_y])
 
         if not self.game_over:
             self.all_sprites_list.draw(screen)
@@ -207,7 +261,7 @@ def Main():
     pygame.init()
 
     # Creats the game window
-    screen = pygame.display.set_mode(screen_size, 0)
+    screen = pygame.display.set_mode(SCREEN_SIZE, 0)
 
     pygame.display.set_caption("Alien")
     pygame.mouse.set_visible(False)

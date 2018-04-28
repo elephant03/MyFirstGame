@@ -27,6 +27,7 @@ class Alien(pygame.sprite.Sprite):
         self.rect.x += 1
         return
 
-    def die(self):
+    def hit(self):
         '''If the alien is hit by the player it will explode'''
-        return
+
+        return True

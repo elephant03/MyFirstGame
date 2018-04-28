@@ -25,5 +25,5 @@ class AlienLaser(pygame.sprite.Sprite):
         self.rect.y = y + 50
 
     def update(self):
-        self.rect.y += 2
+        self.rect.y += 4
         return

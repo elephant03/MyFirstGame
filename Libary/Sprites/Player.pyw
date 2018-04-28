@@ -21,12 +21,17 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
+        self.lives = 2
+
     def update(self):
         '''Allows the player to move across the screen using mouse co-ords'''
         pos = pygame.mouse.get_pos()
         self.rect.x = pos[0]
         return
 
-    def die(self):
+    def hit(self):
         '''If the player is hit by the alien they will explode and game over'''
-        return
+        self.lives -= 1
+        if self.lives > 0:
+            return False
+        return True
