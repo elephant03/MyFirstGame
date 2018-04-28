@@ -1,10 +1,10 @@
 # MyFirstGame
 
 ## Current Release Version
-0.0
+1.0
 
 ## Current Version In Progress
-0.0
+1.1
 
 ## AUTHOR(S): 
 Ambrose Hlustik-Smith
@@ -17,6 +17,7 @@ Ambrose Hlustik-Smith
 Version Num | Date Completed
 ------------|---------------
 0.0| N/A
+1.0|2018/04/28
 
 
 ### Description
@@ -24,3 +25,4 @@ A simple alian invasion game clone- this will be the first game I am not directl
 
 ### Requirments 
 Python 3.X (written in 3.6) with standered python libary and [pygame](https://www.pygame.org)
+Or just extract the zip and run the "game/exe" file
